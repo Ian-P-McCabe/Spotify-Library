@@ -4,6 +4,7 @@ import { Link } from '@chakra-ui/next-js'
 import { Button, VStack } from '@chakra-ui/react';
 import { useEffect, useState } from 'react'
 import SpotifyLogin from './_lib/SpotifyLogin';
+import Profile from './_components/Profile';
 
 
 export default function Page() {
@@ -17,54 +18,94 @@ export default function Page() {
   const clientId = "7bf27890085a4cf8ae39bbec7e1edd6f";
   const [code, setCode] = useState("")
   const [accessToken, setAccessToken] = useState("")
+  const [spotify_profile, setProfile] = useState(null)
 
+  //TODO: Fix this it is messy, the token issue is fixed for now, but will likely return 
   useEffect(() => {
+    console.log("use effect ran")
+
     const params = new URLSearchParams(window.location.search);
+
+    console.log("Code from params: " + params.get("code"))
     setCode(params.get("code") || "")
 
+    console.log("the code is: " + code)
+
     if (code != "") {
+      spotifyLoginHandler.loggedIn = true
+
+      console.log(spotifyLoginHandler.loggedIn)
       const myfunc = async () => {
         spotifyLoginHandler.code = code
         const a_token = await spotifyLoginHandler.getAccessToken(spotifyLoginHandler.code)
-        spotifyLoginHandler.token = a_token
+        setAccessToken(a_token)
       }
       myfunc()
     }
 
-  }, [])
+  }, [code])
 
-  return (
-    <VStack>
-      <Link href='/about' color='blue.400' _hover={{ color: 'blue.500' }}>
-        About
-      </Link>
 
-      <Button onClick={login}>
-        Spotify Login
-      </Button>
+  if (code == "") {
+    return (
+      <VStack>
+        <Button onClick={login}>
+          Spotify Login
+        </Button>
+      </VStack>
+    )
+  } else {
+    return (
+      <VStack>
+        <Button onClick={() => fetchProfile(accessToken)}>
+          Get Profile Data
+        </Button>
 
-      <Button onClick={() => fetchProfile(spotifyLoginHandler.token)}>
-        Login
-      </Button>
-    </VStack>
-  )
-}
+        {spotify_profile &&
+          <VStack>
+            <Profile profileProps={spotify_profile} ></Profile>
 
-async function fetchPlaylists(token: string, profile: any): Promise<any> {
-  const playlists = await fetch(`https://api.spotify.com/v1/users/${profile.id}/playlists`, {
-    method: "GET", headers: { Authorization: `Bearer ${token}` }
-  });
+            <Button onClick={() => fetchPlaylists(accessToken, spotify_profile)}>
+              Get Playlists
+            </Button>
+          </VStack>
+        }
 
-  const myjson = await playlists.json()
 
-  console.log(myjson)
-}
+      </VStack>
+    )
+  }
 
-async function fetchProfile(token: string): Promise<any> {
-  const result = await fetch("https://api.spotify.com/v1/me", {
-    method: "GET", headers: { Authorization: `Bearer ${token}` }
-  });
 
-  const myresult = await result.json();
-  console.log(myresult)
+  async function fetchPlaylists(token: string, profile: any): Promise<any> {
+
+    console.log("REQEST TOKEN")
+    console.log(token)
+
+    const playlists = await fetch(`https://api.spotify.com/v1/users/${profile.id}/playlists`, {
+      method: "GET", headers: { Authorization: `Bearer ${token}` }
+    });
+
+    const myjson = await playlists.json()
+
+    console.log(myjson)
+  }
+
+  async function fetchProfile(token: string) {
+
+    console.log("REQEST TOKEN")
+    console.log(token)
+
+    const result = await fetch("https://api.spotify.com/v1/me", {
+      method: "GET", headers: { Authorization: `Bearer ${token}` }
+    });
+
+    const myresult = await result.json();
+
+    console.log(myresult)
+
+    setProfile(myresult)
+
+    return myresult
+  }
 }

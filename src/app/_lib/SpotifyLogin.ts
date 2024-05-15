@@ -44,7 +44,7 @@ class SpotifyLogin {
     const digest = await window.crypto.subtle.digest("SHA-256", data);
     return btoa(
       String.fromCharCode.apply(null, Array.from(new Uint8Array(digest)))
-    ) //May be broken
+    )
       .replace(/\+/g, "-")
       .replace(/\//g, "_")
       .replace(/=+$/, "");
@@ -66,7 +66,12 @@ class SpotifyLogin {
       body: params,
     });
 
+    console.log(result);
+
     const { access_token } = await result.json();
+
+    console.log("ACCESS TOKEN");
+    console.log(access_token);
 
     return access_token;
   }
