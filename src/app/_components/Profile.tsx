@@ -1,15 +1,15 @@
 
-import { Center, VStack, Image, Text } from "@chakra-ui/react";
-import { profile } from "console";
+import { Center, VStack, Image, Text, Box, HStack } from "@chakra-ui/react";
 
 
 export default function Profile({ profileProps }: any) {
 
     return (
-        <VStack>
-            <Image src={profileProps.images[0].url} alt="" ></Image>
-            <Text>{profileProps.display_name}</Text>
-            <Text>holy shit it works</Text>
-        </VStack >
+        <Box borderWidth="1px" borderRadius='lg' alignItems='baseline' padding="5px">
+            <HStack>
+                <Image src={profileProps.images[0].url} alt="" borderRadius='lg' ></Image>
+                <Text>{profileProps.display_name}</Text>
+            </HStack>
+        </Box >
     )
 }
