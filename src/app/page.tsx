@@ -2,7 +2,7 @@
 'use client'
 import { Link } from '@chakra-ui/next-js'
 import { Button, VStack } from '@chakra-ui/react';
-import { useEffect, useState } from 'react'
+import { use, useEffect, useState } from 'react'
 import SpotifyLogin from './_lib/SpotifyLogin';
 import Profile from './_components/Profile';
 
@@ -68,6 +68,11 @@ export default function Page() {
             <Button onClick={() => fetchPlaylists(accessToken, spotify_profile)}>
               Get Playlists
             </Button>
+
+            <Button onClick={() => getLibrary(accessToken, spotify_profile)}>
+              Get Library
+            </Button>
+
           </VStack>
         }
 
@@ -107,5 +112,23 @@ export default function Page() {
     setProfile(myresult)
 
     return myresult
+  }
+
+  async function getLibrary(token: string, profile: any) {
+    console.log("The token is: " + token)
+
+    console.log("The user id is: " + profile.id)
+
+    const searchParams = new URLSearchParams({
+      token: token,
+      id: profile.id
+    })
+
+    const result = await fetch("http://localhost:3000/api/spotify/get-library?" + searchParams.toString(), {
+      method: "GET"
+    });
+
+    const myjson = await result.json()
+    console.log(myjson)
   }
 }
