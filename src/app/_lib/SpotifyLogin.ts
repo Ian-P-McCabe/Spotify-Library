@@ -23,7 +23,7 @@ class SpotifyLogin {
     params.append("redirect_uri", "http://localhost:3000/api/spotify-login");
     params.append(
       "scope",
-      "user-read-private user-read-email playlist-read-private playlist-read-collaborative"
+      "user-read-private user-read-email playlist-read-private playlist-read-collaborative user-library-read"
     ); // playlist-read-private playlist-read-collaborative
     params.append("code_challenge_method", "S256");
     params.append("code_challenge", challenge);
