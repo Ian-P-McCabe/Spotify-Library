@@ -1,8 +1,13 @@
-import { Center, VStack, Image, Text, Box, HStack, Button, Spacer } from "@chakra-ui/react";
+import { Center, VStack, Text, Box, HStack, Button, Spacer } from "@chakra-ui/react";
+
+import { Image } from "@chakra-ui/next-js";
 
 import styles from './MusicAppTile.module.css'
 
 import { useState } from "react";
+
+import PlusInCirlce from '../../../public/plusincircle.svg'
+import TriangleInCircle from '../../../public/triangleincircle.svg'
 
 export default function SpotifyTile({ profileProps }: any) {
 
@@ -31,6 +36,8 @@ export default function SpotifyTile({ profileProps }: any) {
                     <VStack>
 
                         <div className={styles.box}>
+                            <Image src={TriangleInCircle} alt='play symbol' height={6} width={6}></Image>
+
                             <Text> Playlists  </Text>
                             <div className={styles.push}>
                                 <Button backgroundColor={"#1ED760"} size={'sm'}> Download </Button>
@@ -38,10 +45,17 @@ export default function SpotifyTile({ profileProps }: any) {
                         </div>
 
                         <div className={styles.box}>
-                            <Text> Saved Songs  </Text>
+                            <Image src={PlusInCirlce} alt='plus symbol' height={6} width={6}></Image>
+
+                            <Text> Saved Songs </Text>
+
                             <div className={styles.push}>
                                 <Button backgroundColor={"#1ED760"} size={'sm'}> Download </Button>
                             </div>
+
+
+
+
                         </div>
 
                     </VStack>
