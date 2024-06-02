@@ -1,4 +1,4 @@
-import { Center, VStack, Text, Box, HStack, Button, Spacer } from "@chakra-ui/react";
+import { Center, VStack, Text, Box, HStack, Button, Spacer, Spinner } from "@chakra-ui/react";
 
 import { Image } from "@chakra-ui/next-js";
 
@@ -17,11 +17,12 @@ export default function SpotifyTile({ profileProps }: any) {
     const [loggedIn, setloggedIn] = useState(false)
 
     //An integer to correspond to the total field
-    const [playlists, setPlaylists] = useState(0)
-    const [savedSongs, setSavedSongs] = useState(0)
+    const [playlists, setPlaylists] = useState(-1)
+    const [savedSongs, setSavedSongs] = useState(-1)
     const [code, setCode] = useState("")
     const [accessToken, setAccessToken] = useState("")
     const [loginLoading, setLoginLoading] = useState(true)
+    const [profile, setProfile] = useState(null)
 
 
     useEffect(() => {
@@ -38,11 +39,25 @@ export default function SpotifyTile({ profileProps }: any) {
                 spotifyLoginHandler.code = code
                 const a_token = await spotifyLoginHandler.getAccessToken(spotifyLoginHandler.code)
                 setAccessToken(a_token)
-            }
-            myfunc()
-        }
 
+                const user_profile = await fetchProfile(a_token)
+
+                setProfile(user_profile)
+
+                return [a_token, user_profile]
+            }
+            myfunc().then(async (result) => {
+                const playlistdata = await fetchPlaylists(result[0], result[1])
+                setPlaylists(playlistdata.total)
+
+                const savedTracks = await fetchTracks(result[0])
+                setSavedSongs(savedTracks.total)
+
+            })
+        }
         setLoginLoading(false)
+
+
     }, [code])
 
 
@@ -72,9 +87,16 @@ export default function SpotifyTile({ profileProps }: any) {
                     <VStack>
                         <div className={styles.box}>
                             <Image src={TriangleInCircle} alt='play symbol' height={6} width={6}></Image>
+                            {playlists === -1 &&
+                                <HStack>
+                                    <Spinner size={'sm'}> </Spinner>
+                                    <Text>Playlists</Text>
+                                </HStack>
+                            }
 
-                            <Text> {playlists} Playlists  </Text>
-
+                            {playlists !== -1 &&
+                                <Text> {playlists} Playlists  </Text>
+                            }
                             <div className={styles.push}>
                                 <Button backgroundColor={"#1ED760"} size={'sm'}> Download </Button>
                             </div>
@@ -83,7 +105,15 @@ export default function SpotifyTile({ profileProps }: any) {
                         <div className={styles.box}>
                             <Image src={PlusInCirlce} alt='plus symbol' height={6} width={6}></Image>
 
-                            <Text> {savedSongs} Saved Songs </Text>
+                            {savedSongs === -1 &&
+                                <HStack>
+                                    <Spinner size={'sm'}> </Spinner>
+                                    <Text>Tracks</Text>
+                                </HStack>
+                            }
+                            {savedSongs !== -1 &&
+                                <Text> {savedSongs} Saved Songs </Text>
+                            }
 
                             <div className={styles.push}>
                                 <Button backgroundColor={"#1ED760"} size={'sm'} onClick={() => printToken()}> Download </Button>
@@ -103,6 +133,46 @@ export default function SpotifyTile({ profileProps }: any) {
     async function printToken() {
         console.log("The token is:")
         console.log(accessToken)
+    }
+
+    async function fetchPlaylists(token: string, profile: any): Promise<any> {
+
+        console.log("REQEST TOKEN")
+        console.log(token)
+
+        const playlists = await fetch(`https://api.spotify.com/v1/users/${profile.id}/playlists`, {
+            method: "GET", headers: { Authorization: `Bearer ${token}` }
+        });
+
+        const myjson = await playlists.json()
+        console.log("Playlist data\n")
+        console.log(myjson)
+
+        return myjson
+    }
+
+    async function fetchProfile(token: string) {
+
+        const result = await fetch("https://api.spotify.com/v1/me", {
+            method: "GET", headers: { Authorization: `Bearer ${token}` }
+        });
+
+        const myresult = await result.json();
+
+        console.log(myresult)
+
+        return myresult
+    }
+
+    async function fetchTracks(token: string) {
+        const result = await fetch("https://api.spotify.com/v1/me/tracks", {
+            method: "GET", headers: { Authorization: `Bearer ${token}` }
+        });
+
+        const myresult = await result.json();
+
+        return myresult
+
     }
 
 }
