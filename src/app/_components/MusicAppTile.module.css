@@ -1,0 +1,17 @@
+.MusicAppTitle {
+    display: flex;
+    align-items: row;
+    width: 350px;
+    font-size: 25px;
+    font-weight: bold;
+    padding-left: 10px
+}
+
+.box {
+    width: 300px;
+    display: flex;
+}
+
+.push {
+    margin-left:auto;
+}

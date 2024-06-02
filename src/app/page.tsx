@@ -1,10 +1,12 @@
 // app/page.tsx
 'use client'
 import { Link } from '@chakra-ui/next-js'
-import { Button, VStack } from '@chakra-ui/react';
+import { Button, HStack, VStack } from '@chakra-ui/react';
 import { use, useEffect, useState } from 'react'
 import SpotifyLogin from './_lib/SpotifyLogin';
 import Profile from './_components/Profile';
+import SpotifyTile from './_components/SpotifyTile';
+import AppleTile from './_components/AppleTile';
 
 
 export default function Page() {
@@ -45,6 +47,12 @@ export default function Page() {
 
   }, [code])
 
+  return (
+    <HStack paddingBlock={50} spacing={20}>
+      <SpotifyTile></SpotifyTile>
+      <AppleTile></AppleTile>
+    </HStack>
+  )
 
   if (code == "") {
     return (
