@@ -23,29 +23,29 @@ export default function Page() {
   const [spotify_profile, setProfile] = useState(null)
 
   //TODO: Fix this it is messy, the token issue is fixed for now, but will likely return 
-  useEffect(() => {
-    console.log("use effect ran")
+  // useEffect(() => {
+  //   console.log("use effect ran")
 
-    const params = new URLSearchParams(window.location.search);
+  //   const params = new URLSearchParams(window.location.search);
 
-    console.log("Code from params: " + params.get("code"))
-    setCode(params.get("code") || "")
+  //   console.log("Code from params: " + params.get("code"))
+  //   setCode(params.get("code") || "")
 
-    console.log("the code is: " + code)
+  //   console.log("the code is: " + code)
 
-    if (code != "") {
-      spotifyLoginHandler.loggedIn = true
+  //   if (code != "") {
+  //     spotifyLoginHandler.loggedIn = true
 
-      console.log(spotifyLoginHandler.loggedIn)
-      const myfunc = async () => {
-        spotifyLoginHandler.code = code
-        const a_token = await spotifyLoginHandler.getAccessToken(spotifyLoginHandler.code)
-        setAccessToken(a_token)
-      }
-      myfunc()
-    }
+  //     console.log(spotifyLoginHandler.loggedIn)
+  //     const myfunc = async () => {
+  //       spotifyLoginHandler.code = code
+  //       const a_token = await spotifyLoginHandler.getAccessToken(spotifyLoginHandler.code)
+  //       setAccessToken(a_token)
+  //     }
+  //     myfunc()
+  //   }
 
-  }, [code])
+  // }, [code])
 
   return (
     <HStack paddingBlock={50} spacing={20}>

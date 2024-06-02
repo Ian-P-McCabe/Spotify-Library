@@ -69,12 +69,12 @@ class SpotifyLogin {
       body: params,
     });
 
-    console.log(result);
+    //console.log(result);
 
     const { access_token } = await result.json();
 
-    console.log("ACCESS TOKEN");
-    console.log(access_token);
+    //console.log("ACCESS TOKEN");
+    //console.log(access_token);
 
     return access_token;
   }
