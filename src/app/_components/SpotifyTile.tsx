@@ -53,12 +53,20 @@ export default function SpotifyTile({ profileProps }: any) {
                 const savedTracks = await fetchTracks(result[0])
                 setSavedSongs(savedTracks.total)
 
+            }).then(() => {
+                console.log("In another then, the token is: " + accessToken)
+                console.log("In another then, the profile is: " + profile)
             })
         }
         setLoginLoading(false)
 
 
     }, [code])
+
+    // useEffect(() => {
+    //     console.log("In another useEffect, the token is: " + accessToken)
+    //     console.log("In another useEffect, the profile is: " + JSON.stringify(profile))
+    // }, [accessToken, profile])
 
 
     if (!loggedIn) {
