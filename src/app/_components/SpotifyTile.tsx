@@ -22,6 +22,8 @@ export default function SpotifyTile({ profileProps }: any) {
     const [code, setCode] = useState("")
     const [accessToken, setAccessToken] = useState("")
     const [loginLoading, setLoginLoading] = useState(true)
+
+    const [playlistsLoading, setPlaylistsLoading] = useState(false)
     const [profile, setProfile] = useState(null)
 
 
@@ -95,6 +97,7 @@ export default function SpotifyTile({ profileProps }: any) {
                     <VStack>
                         <div className={styles.box}>
                             <Image src={TriangleInCircle} alt='play symbol' height={6} width={6}></Image>
+
                             {playlists === -1 &&
                                 <HStack>
                                     <Spinner size={'sm'}> </Spinner>
@@ -105,8 +108,9 @@ export default function SpotifyTile({ profileProps }: any) {
                             {playlists !== -1 &&
                                 <Text> {playlists} Playlists  </Text>
                             }
+
                             <div className={styles.push}>
-                                <Button backgroundColor={"#1ED760"} size={'sm'}> Download </Button>
+                                <Button backgroundColor={"#1ED760"} size={'sm'} onClick={() => getPlaylists(accessToken, profile)} isLoading={playlistsLoading}> Download </Button>
                             </div>
                         </div>
 
@@ -180,6 +184,41 @@ export default function SpotifyTile({ profileProps }: any) {
         const myresult = await result.json();
 
         return myresult
+
+    }
+
+    async function getPlaylists(token: string, profile: any) {
+        setPlaylistsLoading(true)
+        const searchParams = new URLSearchParams({
+            token: token,
+            id: profile.id
+        })
+
+        const result = await fetch("http://localhost:3000/api/spotify/get-playlists?" + searchParams.toString(), {
+            method: "GET"
+        });
+
+        const myjson = await result.json()
+
+        setPlaylistsLoading(false)
+        console.log("Playlist JSON: ")
+        console.log(myjson)
+
+        const fileName = "Your Playlists"
+        const downloadJSON = JSON.stringify(myjson, null, 2)
+        const blob = new Blob([downloadJSON], { type: "application/json" });
+        const href = URL.createObjectURL(blob);
+
+        const link = document.createElement("a");
+        link.href = href;
+        link.download = fileName + ".json";
+        document.body.appendChild(link);
+        link.click();
+
+        // clean up "a" element & remove ObjectURL
+        document.body.removeChild(link);
+        URL.revokeObjectURL(href);
+
 
     }
 

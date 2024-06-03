@@ -30,6 +30,7 @@ export async function GET(request: Request) {
     playlistLinks.push(item.href);
   }
 
+  console.log("Playlist links:");
   console.log(playlistLinks);
 
   //Empty array of playlists
@@ -37,17 +38,22 @@ export async function GET(request: Request) {
 
   //For each playlist link, obtain playlist data
 
+  //TODO: increase from 5
   for (let i = 0; i < 5; i++) {
     //Lets get data on fewer playlists
-    const playlistData = await fetch(playlistLinks[i], {
-      method: "GET",
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const playlistData = await fetch(
+      playlistLinks[i] +
+        "?fields=name,id,description,tracks.items(track(external_ids,track_number,id,name,album(name, id)))",
+      {
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
 
     const PJSON = await playlistData.json();
 
     let playlist = {};
-
+    //fields=name,id,description,tracks.items(track(external_ids,track_number,id,name,album(name, id)))
     playlist.name = PJSON.name;
     playlist.spotify_id = PJSON.id;
     playlist.description = PJSON.description;

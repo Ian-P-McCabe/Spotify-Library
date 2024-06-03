@@ -132,7 +132,7 @@ export default function Page() {
       id: profile.id
     })
 
-    const result = await fetch("http://localhost:3000/api/spotify/get-library?" + searchParams.toString(), {
+    const result = await fetch("http://localhost:3000/api/spotify/get-playlists?" + searchParams.toString(), {
       method: "GET"
     });
 
