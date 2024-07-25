@@ -1,16 +1,14 @@
 import { Center, VStack, Text, Box, HStack, Button, Spacer, Spinner } from "@chakra-ui/react";
-
 import { Image } from "@chakra-ui/next-js";
-
 import styles from './MusicAppTile.module.css'
-
 import { useEffect, useState } from "react";
-
 import PlusInCirlce from '../../../public/plusincircle.svg'
 import TriangleInCircle from '../../../public/triangleincircle.svg'
 import SpotifyLogin from "../_lib/SpotifyLogin";
 
+
 export default function SpotifyTile({ profileProps }: any) {
+
 
     var spotifyLoginHandler = new SpotifyLogin()
 
@@ -218,8 +216,6 @@ export default function SpotifyTile({ profileProps }: any) {
         // clean up "a" element & remove ObjectURL
         document.body.removeChild(link);
         URL.revokeObjectURL(href);
-
-
     }
 
 }

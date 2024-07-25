@@ -24,6 +24,8 @@ export default function RootLayout({
 
           </VStack>
         </Box>
+        {/* <script src="https://js-cdn.music.apple.com/musickit/v3/musickit.js" data-web-components async></script> */}
+
       </body>
     </html>
   )
